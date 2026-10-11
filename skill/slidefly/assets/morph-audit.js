@@ -4,6 +4,8 @@
    - charts carry data-source; at most 6 icons, none missing; photo slides credit their picture.
    - text under 3:1 (WCAG) against the solid actor or its own box below it: "chữ khó đọc trên hình".
    - 3 inner slides in a row with the same look (layout, pose, diagrams, verbs) = monotone.
+   - whole deck (8+ inner slides): one skeleton (kind, frame, title mode, body blocks) at most
+     max(3, 20%) times; 10+ inner slides use at least 3 frames.
    Run it outside a live talk: it briefly shows steps not yet clicked.
    =========================================================== */
 (() => {
@@ -164,8 +166,8 @@
     const gapY = maxGap(ink.map((r) => [r.y0, r.y1]), SAFE.y0, SAFE.y1) / (SAFE.y1 - SAFE.y0);
     const gapX = maxGap(ink.map((r) => [r.x0, r.x1]), SAFE.x0, SAFE.x1) / (SAFE.x1 - SAFE.x0);
     const display = DISPLAY.includes(layout);
-    if (!display && gapY > (LIMIT_Y_BY_LAYOUT[layout] || LIMIT.gapY)) issues.push(`trống dọc ${Math.round(gapY * 100)}%`);
-    if (!display && gapX > LIMIT.gapX) issues.push(`trống ngang ${Math.round(gapX * 100)}%`);
+    if (!display && gapY > (slide.dataset.frame === 'spotlight' ? 0.38 : LIMIT_Y_BY_LAYOUT[layout] || LIMIT.gapY)) issues.push(`trống dọc ${Math.round(gapY * 100)}%`);
+    if (!display && gapX > (slide.dataset.frame === 'stairs' ? 0.42 : LIMIT.gapX)) issues.push(`trống ngang ${Math.round(gapX * 100)}%`);
     return {
       slide: i + 1, layout, density: slide.dataset.density || '',
       gapY: `${Math.round(gapY * 100)}%`, gapX: `${Math.round(gapX * 100)}%`,
@@ -182,6 +184,32 @@
     return [slide.dataset.kind || slide.dataset.layout || 'content', slide.dataset.pose || '', slide.dataset.frame || '', kinds.join('+'), [...verbs].sort().join('+')].join('|');
   }
 
+  /* skeleton = what the eye reads as "that slide again", whatever the words, colours or motion verbs */
+  const BODY = ['bullets', 'cols', 'stats', 'timeline', 'agenda-list', 'bento', 'process', 'ctable', 'ba', 'countdown', 'ico-grid', 'viz', 'mock', 'highlight'];
+  function skeletonOf(slide) {
+    const vizKinds = [...new Set([...slide.querySelectorAll('.viz[data-viz]')].map((v) => v.dataset.viz))].sort().join(',');   // a funnel and a matrix look different; mock windows do not
+    const body = BODY.filter((c) => slide.querySelector('.' + c)).map((c) => (c === 'viz' && vizKinds ? `viz:${vizKinds}` : c)).join('+');
+    // no standard block: a hand-drawn figure (venn, axis, pipe...) is its own look, named by its first element's class
+    const own = body ? '' : [...slide.children].find((c) => !c.matches('.title, .frame-panel, [aria-hidden="true"]'))?.classList[0] || 'text';
+    return [slide.dataset.kind || slide.dataset.layout || 'content', slide.dataset.frame || 'no-frame', slide.dataset.title || 'top', body || own].join(' | ');
+  }
+  function deckRepeats(report, slides) {
+    const inner = report.map((r, i) => i).filter((i) => !DISPLAY.includes(report[i].layout));
+    const n = inner.length;
+    const flag = (i, msg) => { const r = report[i]; r.issues = [r.issues, msg].filter(Boolean).join('; '); r.status = 'SỬA'; };
+    if (n >= 8) {
+      const cap = Math.max(3, Math.ceil(n * 0.2)), seen = {};
+      inner.forEach((i) => {
+        const k = skeletonOf(slides[i]);
+        seen[k] = (seen[k] || 0) + 1;
+        if (seen[k] > cap) flag(i, `nhàm toàn deck: dáng "${k}" lần thứ ${seen[k]} (tối đa ${cap} trên ${n} slide trong)`);
+      });
+    }
+    const framable = inner.filter((i) => report[i].layout !== 'diagram');   // a full-body diagram does not take a frame
+    const frames = new Set(framable.map((i) => slides[i].dataset.frame).filter(Boolean));
+    if (framable.length >= 10 && frames.size < 3) flag(framable[0], `ít khung: deck có ${framable.length} slide trong (không tính sơ đồ) mới dùng ${frames.size} khung (data-frame), nên dùng ít nhất 3`);
+  }
+
   window.deck.audit = () => {
     stage.classList.add('auditing');
     const saved = { ...stage.dataset };
@@ -193,6 +221,7 @@
       r.issues = [r.issues, 'nhàm: giống hệt 2 slide trước'].filter(Boolean).join('; ');
       r.status = 'SỬA';
     });
+    deckRepeats(report, slides);
     ['layout', 'pose', 'parity', 'variant'].forEach((key) => { stage.dataset[key] = saved[key] ?? ''; });
     window.deck.ink?.();
     stage.classList.remove('auditing');

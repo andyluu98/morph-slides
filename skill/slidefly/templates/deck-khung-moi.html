@@ -1,0 +1,70 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><title>Mẫu SlideFly · 5 khung mới</title>
+<!-- Mẫu 7 slide: 5 khung mới (media-left, media-right, magazine, spotlight, stairs). Đổi style: thay 1 dòng link styles/*.css. --><link rel="stylesheet" href="../assets/morph-base.css"><link rel="stylesheet" href="../assets/morph-layouts.css"><link rel="stylesheet" href="../assets/morph-layouts-plus.css"><link rel="stylesheet" href="../assets/morph-frames.css"><link rel="stylesheet" href="../assets/morph-mock.css"><link rel="stylesheet" href="../assets/morph-motion.css"><link rel="stylesheet" href="../assets/styles/soft-editorial.css"></head><body><main class="deck-stage">
+<section class="slide" data-layout="cover">
+  <p class="kicker reveal">Thử bố cục mới</p>
+  <h1 class="title reveal">Bốn cách xếp slide không rập khuôn</h1>
+  <p class="subtitle reveal">media, magazine, spotlight, stairs</p>
+</section>
+
+<section class="slide" data-layout="content" data-frame="media-left">
+  <h2 class="title reveal">Giao việc cho subagent bằng một câu rõ ràng</h2>
+  <div class="mock mock-chat" data-title="Claude Code" style="left:60px;top:140px;width:780px;height:800px">
+    <div class="msg user type">Đọc 5 bài báo trong thư mục, mỗi bài tóm tắt 3 ý, ghi nguồn trang.</div>
+    <div class="msg ai lines" data-who="Claude"><p>Đang chạy 5 subagent song song...</p><p>Xong 5/5, gộp vào 04_ma-tran.md</p></div>
+  </div>
+  <ul class="bullets">
+    <li class="reveal"><b>Nói việc</b>: đọc gì, tóm tắt mấy ý.</li>
+    <li class="reveal"><b>Nói luật</b>: ghi nguồn, không bịa số.</li>
+    <li class="reveal"><b>Nói nơi giao</b>: tên file kết quả.</li>
+  </ul>
+</section>
+
+<section class="slide" data-layout="content" data-frame="magazine">
+  <h2 class="title reveal">Agent chuyên trách khác subagent tạm ở đâu</h2>
+  <ul class="bullets">
+    <li class="reveal"><b>Có hồ sơ riêng</b>: tên, chuyên môn, quy tắc nằm trong một file.</li>
+    <li class="reveal"><b>Dùng lại được</b>: gọi tên là chạy, mọi phiên đều như nhau.</li>
+    <li class="reveal"><b>Subagent tạm</b>: viết lời giao ngay lúc cần, xong là thôi.</li>
+    <li class="reveal"><b>Chọn khi nào</b>: việc lặp lại thì lập hồ sơ, việc một lần thì gọi tạm.</li>
+  </ul>
+  <aside class="highlight reveal">
+    <p class="hl-text">Việc lặp lại thì lập hồ sơ. Việc một lần thì gọi tạm.</p>
+  </aside>
+</section>
+
+<section class="slide" data-layout="content" data-frame="spotlight">
+  <h2 class="title reveal">Không có gì ghi lại thì coi như chưa làm</h2>
+  <ul class="bullets">
+    <li class="reveal">Mỗi agent ghi kết quả ra file</li>
+    <li class="reveal">Tên file đánh số theo thứ tự</li>
+    <li class="reveal">Bản cũ chuyển vào _backup</li>
+  </ul>
+</section>
+
+<section class="slide" data-layout="content" data-frame="stairs">
+  <h2 class="title reveal">Bốn bước lập agent phân tích số liệu</h2>
+  <ul class="bullets">
+    <li class="reveal"><b>Mở Claude Code</b> ở thư mục dự án</li>
+    <li class="reveal"><b>Dán prompt</b> tạo agent, đặt tên rõ</li>
+    <li class="reveal"><b>Mở file hồ sơ</b> .claude/agents để xem</li>
+    <li class="reveal"><b>Gọi thử</b> với một file CSV nhỏ</li>
+  </ul>
+</section>
+
+<section class="slide" data-layout="content" data-frame="media-right">
+  <h2 class="title reveal">Một trợ lý, nhiều việc song song</h2>
+  <ul class="bullets">
+    <li class="reveal">Mỗi subagent có cửa sổ ngữ cảnh riêng.</li>
+    <li class="reveal">Việc dài không làm rối cuộc chat chính.</li>
+    <li class="reveal">Kết quả gom lại một chỗ để duyệt.</li>
+  </ul>
+  <aside class="highlight reveal-scale">
+    <p class="hl-big">5</p>
+    <p class="hl-text">bài báo đọc cùng lúc</p>
+  </aside>
+</section>
+
+<section class="slide" data-layout="closing">
+  <h2 class="title reveal">Đổi dáng, không chỉ đổi màu</h2>
+</section>
+</main><script src="../assets/morph-frames.js"></script><script src="../assets/morph-mock.js"></script><script src="../assets/morph-engine.js"></script><script src="../assets/morph-nav.js"></script><script src="../assets/morph-audit.js"></script><script src="../assets/morph-steps.js"></script></body></html>

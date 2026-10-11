@@ -214,10 +214,19 @@ Quy tắc chọn: ý nào có dáng riêng thì dùng dáng đó, đừng nhét 
 
 ## Khung bố cục (data-frame): phá lưới "tiêu đề góc trái, khối nội dung ở giữa"
 
+Mọi style dùng chung một bộ khung chữ: đổi style chỉ đổi màu, font và hình trang trí. Muốn hai slide trông khác nhau thì phải đổi khung.
+
 Nạp thêm `morph-frames.css` (sau morph-layouts-plus.css) và `morph-frames.js` (trước morph-engine.js), rồi gắn `data-frame` lên slide bên trong. Nội dung giữ nguyên: gạch đầu dòng, hai cột, số liệu, dòng thời gian, bento, quy trình, bảng so sánh, đếm ngược, lưới icon, sơ đồ đều tự chạy vào vùng của khung.
 
 ```html
 <section class="slide" data-layout="content" data-frame="split-left">
+
+<!-- media-left: hình to bên trái, chữ bên phải -->
+<section class="slide" data-layout="content" data-frame="media-left">
+  <h2 class="title reveal">Giao việc bằng một câu rõ ràng</h2>
+  <div class="mock mock-chat" data-title="Claude Code" style="left:60px;top:140px;width:780px;height:800px">...</div>
+  <ul class="bullets"><li class="reveal">...</li></ul>
+</section>
 ```
 
 | Khung | Cách chia mặt slide | Hợp với |
@@ -233,8 +242,14 @@ Nạp thêm `morph-frames.css` (sau morph-layouts-plus.css) và `morph-frames.js
 | `frame` | khung viền đậm, tiêu đề nằm trên đường viền | tóm tắt, checklist |
 | `zigzag` | các gạch đầu dòng thành thẻ so le | 3 đến 5 ý ngắn |
 | `numbered` | gạch đầu dòng đánh số lớn | các bước, thứ tự |
+| `media-left`, `media-right` | nửa slide là một ô hình tràn mép (khung giao diện, SVG, sơ đồ, hoặc `.highlight` với số rất lớn), nửa kia tiêu đề và 2 đến 4 ý | demo phần mềm, ảnh, sơ đồ cần nhìn to |
+| `magazine` | tiêu đề 96px, đường kẻ, các ý chia hai cột, câu trích lớn ở lề phải (`.highlight` chỉ có `.hl-text`) | so sánh, giải thích có kết luận |
+| `spotlight` | một câu chốt 104px giữa slide, 2 đến 4 ý ngắn thành hàng thẻ bên dưới (không dùng `.highlight`) | thông điệp chính, nguyên tắc |
+| `stairs` | các ý thành bậc thang đánh số, đi chéo từ trên trái xuống dưới phải (3 đến 5 ý) | các bước, lộ trình, mức độ tăng dần |
 
 - Khung có mảng màu tự cho slide sân khấu trống (mảng màu là phần trang trí); muốn giữ hình của style thì ghi `data-stage`.
 - Chữ trên mảng màu nhấn tự lấy màu tương phản (`--on-accent`, engine chọn theo từng slide).
-- Deck từ 12 slide: dùng ít nhất 3 khung khác nhau, không để quá một phần ba số slide bên trong cùng một khung (hoặc cùng dáng mặc định). Đã kiểm trên cả 57 style.
-- Mẫu đủ 12 khung: `templates/deck-khung.html`.
+- **Luật đa dạng (deck.audit() bắt buộc):** deck có từ 8 slide bên trong thì một "dáng" (kiểu slide, khung, vị trí tiêu đề, loại khối thân) dùng tối đa max(3, 20%) lần; từ 10 slide bên trong (không tính slide `diagram`) thì dùng ít nhất 3 khung. Sơ đồ khác loại (`data-viz`) hay hình tự vẽ khác nhau tính là dáng khác nhau. Slide trưng bày (bìa, chương, trích dẫn, kết, `free`) không tính.
+- (Chỉ khi cần xuất PPTX) Muốn đổi vùng thân của một khung ở riêng một slide (biến `--fl`, `--fr`... trên section): bản PowerPoint dùng tọa độ cố định của khung, nên ghi luôn vị trí inline lên khối thân (`style="left:..px;top:..px;width:..px;height:..px"`).
+- `media-*`: đặt hình là con trực tiếp của slide; CSS tự đặt hình vào ô. Khi cần xuất PPTX thì ghi thêm hộp inline để bản PowerPoint đặt đúng chỗ: trái `style="left:60px;top:140px;width:780px;height:800px"`, phải `left:1080px`. Không có hình thì dùng `.highlight` với `.hl-big` (tự to 280px).
+- Mẫu: `templates/deck-khung.html` (12 khung đầu) và `templates/deck-khung-moi.html` (5 khung mới).

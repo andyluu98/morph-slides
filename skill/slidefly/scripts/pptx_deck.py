@@ -11,7 +11,8 @@ from pathlib import Path
 CLASSIC_OF = {'qa': 'quote', 'portrait-quote': 'quote', 'statement': 'quote', 'chapter': 'section', 'cta': 'cover',
               'big-number': 'diagram', 'split-photo': 'diagram', 'bento': 'diagram', 'process': 'diagram',
               'before-after': 'diagram', 'compare-table': 'diagram', 'countdown': 'diagram', 'free': 'diagram'}
-PANEL_FRAMES = {'split-left', 'split-right', 'poster', 'band', 'rail', 'bottom', 'stack', 'corner', 'diagonal', 'frame'}
+PANEL_FRAMES = {'split-left', 'split-right', 'poster', 'band', 'rail', 'bottom', 'stack', 'corner', 'diagonal', 'frame',
+                'media-left', 'media-right', 'magazine', 'spotlight', 'stairs'}   # stairs: no panel, but a clear stage
 VOID = {'br', 'img', 'meta', 'link', 'input', 'hr', 'source', 'col', 'wbr'}
 
 

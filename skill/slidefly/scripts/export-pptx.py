@@ -121,7 +121,10 @@ def build_items(sl, sheet, base):
         hl_box = FRAMES[frame][3] if frame in FRAMES and FRAMES[frame][3] else (1260, ft, 540, 1080 - fb - ft)
         x0, x1, y0, y1 = box
         if hl:
-            highlight(ctx, hl, *hl_box, on_panel=frame in ON_PANEL)
+            if frame == 'magazine':   # pull quote: a short accent rule over left-set italic words
+                ctx.rect('Quote rule', hl_box[0], hl_box[1] + hl_box[3] / 2 - 120, 120, 8, (t['accent'][0], 1))
+            highlight(ctx, hl, *hl_box, on_panel=frame in ON_PANEL, big_cap=280 if (frame or '').startswith('media') else 160,
+                      align='l' if frame == 'magazine' else 'ctr')
             if hl_box[0] > x0 and hl_box[1] < y1 - 100:
                 x1 = min(x1, hl_box[0] - 40)
         if node.by_class('bullets') and not plus(ctx, sl, box):

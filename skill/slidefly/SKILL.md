@@ -1,6 +1,6 @@
 ---
 name: slidefly
-description: Tạo slide HTML có hiệu ứng chuyển cảnh kiểu PowerPoint Morph (hình trang trí trượt, phóng to, đổi màu liền mạch giữa các slide), 85 style (34 style hai lớp có minh họa vẽ riêng từng slide), 21 kiểu slide, 12 khung bố cục, sơ đồ tự vẽ, và xuất ra file PowerPoint .pptx sửa được vẫn giữ Morph. Dùng khi người dùng nói "slide morph", "slide animation đẹp", "slide HTML có hiệu ứng chuyển cảnh", "làm deck chuyển động", "xuất pptx có morph", "/slidefly", "SlideFly", hoặc muốn chuyển một mẫu PowerPoint Morph sang web. Không dùng khi chỉ cần một file Word/Excel, hay slide HTML hiệu ứng xuất hiện đơn giản (frontend-slides).
+description: Tạo slide HTML có hiệu ứng chuyển cảnh kiểu PowerPoint Morph (hình trang trí trượt, phóng to, đổi màu liền mạch giữa các slide), 85 style (34 style hai lớp có minh họa vẽ riêng từng slide), 21 kiểu slide, 17 khung bố cục, sơ đồ tự vẽ, và xuất ra file PowerPoint .pptx sửa được vẫn giữ Morph. Dùng khi người dùng nói "slide morph", "slide animation đẹp", "slide HTML có hiệu ứng chuyển cảnh", "làm deck chuyển động", "xuất pptx có morph", "/slidefly", "SlideFly", hoặc muốn chuyển một mẫu PowerPoint Morph sang web. Không dùng khi chỉ cần một file Word/Excel, hay slide HTML hiệu ứng xuất hiện đơn giản (frontend-slides).
 ---
 
 # SlideFly: slide biết bay
@@ -16,13 +16,21 @@ Skill dir: `~/.claude/skills/slidefly/` (gọi tắt `$SK`). Script chỉ dùng 
 - **Số liệu có nguồn.** Không bịa số, tên, ngày. Số trên slide ghi nguồn ngay cạnh hoặc ở `data-source`. Không có số thật thì dùng ý, hình, câu chốt. Tính năng, giá, lệnh của công cụ AI phải tra tài liệu chính thức và ghi ngày tra.
 - **Chữ đọc được:** tương phản ít nhất 3:1 với thứ nằm dưới nó; không tràn khung; không đè chữ khác; không để một dòng vắt qua hai nền khác màu.
 - **Tiếng Việt có dấu, câu ngắn, không dùng ký tự gạch ngang dài.**
+- **HTML trước, PowerPoint khi được xin:** mặc định chỉ giao file HTML. Chỉ chạy `export-pptx.py` (và chỉ viết thêm vị trí inline, thuộc tính phục vụ PPTX) khi người dùng xin file PowerPoint; xuất PPTX tốn thời gian.
 - **Giao một file:** gộp bằng `inline-assets.py`, đặt tên theo quy tắc đánh số của thư mục đích, sao lưu bản cũ vào `_backup/` trước khi ghi đè.
 
 ## 2. Nguyên tắc thiết kế (hướng dẫn, tự quyết theo nội dung)
 
 - **Mỗi slide một ý.** Ý dài thì tách slide. Thuyết trình thì ít chữ, tài liệu để đọc thì được dày hơn.
 - **Hình theo ý:** quy trình, so sánh, tỷ lệ, phân loại, lọc dần... mỗi loại một dạng hình (`references/hieu-ung-va-so-do.md` mục 2). Không phải ý nào cũng là gạch đầu dòng.
-- **Đa dạng nhịp và dáng.** Đừng để nhiều slide liền nhau cùng một dáng. Xen kẽ slide dày và slide nghỉ (câu chốt, ảnh, con số lớn). Deck dài nên dùng nhiều khung khác nhau và có vài slide tự thiết kế.
+- **Đổi dáng, không chỉ đổi màu.** Mọi style dùng chung một bộ khung chữ (tiêu đề góc trên trái, thân bên dưới); đổi style không làm slide khác dáng. Dáng đến từ kiểu slide và khung (`data-frame`). Xen kẽ slide dày và slide nghỉ (câu chốt, ảnh, con số lớn).
+- **Ngân sách dáng (deck.audit() bắt lỗi):** deck có từ 8 slide bên trong thì một dáng dùng tối đa max(3, 20%) lần; từ 10 slide bên trong (không tính slide `diagram`) thì dùng ít nhất 3 khung. Gợi ý theo ý của slide:
+  - có hình, khung giao diện, sơ đồ cần nhìn rõ: `media-left` / `media-right` (hình chiếm nửa slide), đừng thu hình vào một ô nhỏ bên phải;
+  - thông điệp chính, nguyên tắc: `spotlight`, `poster`, `statement`;
+  - so sánh, giải thích có kết luận: `magazine`, `compare-table`, `split-*`;
+  - các bước, lộ trình: `stairs`, `process`, `timeline`, `numbered`;
+  - danh sách ngắn: `zigzag`, `rail`, `bento`.
+- **Cỡ chữ cho thuyết trình:** chữ thân từ 32px; slide chốt dùng tiêu đề lớn (khung `spotlight`, `poster`, `magazine`) thay vì tiêu đề 64px mặc định.
 - **Slide tự thiết kế:** deck từ 10 slide nên có 2 đến 4 slide do chính bạn thiết kế cho đúng nội dung (bìa, con số quan trọng nhất, slide chốt), dùng `data-layout="free"` và CSS riêng trong `<style>` của deck. Cách làm và 4 công thức gợi ý: `references/tu-thiet-ke.md`.
 - **Hình phục vụ ý:** icon chỉ cho ý chính (không gắn vào từng gạch đầu dòng); khung giao diện giả khi cần cho thấy phần mềm chạy; ảnh nền khi cần điểm nghỉ (ảnh có giấy phép, ghi nguồn).
 - **Đừng để slide trống trơn hay chật cứng.** Slide content có thể dùng khối điểm nhấn `.highlight`, một hình, một con số, hoặc một bố cục riêng: tùy ý, không bắt buộc cái nào.
@@ -32,7 +40,7 @@ Skill dir: `~/.claude/skills/slidefly/` (gọi tắt `$SK`). Script chỉ dùng 
 ```
 assets/morph-base.css, morph-layouts.css   khung 1920x1080, diễn viên, reveal; 9 kiểu gốc tự co chữ theo số ý
 assets/morph-layouts-plus.css   12 kiểu mới: big-number, bento, split-photo, qa, before-after, process, compare-table, portrait-quote, chapter, countdown, statement, cta
-assets/morph-frames.css/.js     12 khung phá lưới: data-frame="split-left|split-right|poster|band|rail|bottom|stack|corner|diagonal|frame|zigzag|numbered"
+assets/morph-frames.css/.js     17 khung phá lưới: data-frame="split-left|split-right|poster|band|rail|bottom|stack|corner|diagonal|frame|zigzag|numbered|media-left|media-right|magazine|spotlight|stairs"
 assets/morph-engine.js, morph-nav.js, morph-audit.js   engine, điều hướng (nút hai rìa, phím, vuốt), deck.audit()
 assets/morph-motion.css, morph-viz*.{css,js}, morph-steps.js   hiệu ứng theo động từ, 8 dạng sơ đồ tự vẽ, bấm từng bước
 assets/morph-brand.css, morph-mock.css/.js, morph-photo.css, morph-icons.css/.js   logo xuyên suốt, khung giao diện giả, ảnh nền, icon Tabler
@@ -51,7 +59,7 @@ Biến thể nhanh trên slide: `data-title="center|side"` (vị trí tiêu đ�
 ### Bước 1. Hiểu nội dung
 - File `.docx/.pdf/.pptx` thì convert bằng markitdown trước khi đọc.
 - Hỏi gộp một lượt những gì còn thiếu (mục đích và người xem; số slide; ít hay nhiều chữ; chất mong muốn). Bỏ câu người dùng đã trả lời.
-- Lập dàn ý: mỗi slide một ý, ghi dáng dự định cho từng slide (kiểu có sẵn, khung, hay tự thiết kế). Đọc lại cả dàn ý: nếu nhiều slide cùng một dáng thì đổi bớt.
+- Lập dàn ý thành bảng: số slide, ý, **dáng** (kiểu slide + khung, hoặc tự thiết kế). Đếm cột dáng trước khi dựng: dáng nào vượt ngân sách (mục 2) thì đổi bớt. Deck bài giảng dài dễ trượt về một công thức lặp (ví dụ "các bước bên trái, khung giao diện bên phải"): rải đều các khung.
 
 ### Bước 2. Chọn style
 - Người dùng nêu tên style thì dùng style đó.
@@ -65,7 +73,7 @@ Biến thể nhanh trên slide: `data-title="center|side"` (vị trí tiêu đ�
 - **Style hai lớp** (có thêm file `assets/styles/<slug>.art.md`, nhãn `art: true` trong `index.json`): ngoài lớp sân khấu CSS, style có bản luật minh họa. Đọc file `.art.md` trước khi dựng.
   - Chế độ **đẹp** (mặc định với style hai lớp): bìa và mỗi slide mang ý chính có **một minh họa SVG inline vẽ riêng theo nội dung slide đó** (vật thể, sơ đồ, cảnh), đúng bảng màu, nét, hình mẫu trong `.art.md`. Không lặp cùng một hình ở hai slide. Chữ cần sửa được thì để ngoài SVG.
   - Chế độ **nhanh** (người dùng nói "nhanh", "ít token", hoặc deck trên 25 slide): chỉ dùng lớp sân khấu như style thường, thêm minh họa cho bìa và slide chốt.
-  - SVG inline xuất sang PowerPoint thành hình vector (`export-pptx.py`), vẫn giữ Morph cho diễn viên.
+  - Khi người dùng xin PPTX: SVG inline xuất thành hình vector (`export-pptx.py`), vẫn giữ Morph cho diễn viên.
 
 ### Bước 4. Gộp thành 1 file
 ```bash
@@ -78,16 +86,18 @@ python "$SK/scripts/inline-assets.py" nguon.html "<thu-muc-dich>/NN_ten-deck.htm
 
 | Báo lỗi | Hướng sửa |
 |---|---|
-| `trống dọc` / `trống ngang` | thêm hình, số, điểm nhấn; gộp slide thưa; hoặc đổi sang khung/kiểu thoáng có chủ ý |
+| `trống dọc` / `trống ngang` | ưu tiên đổi sang khung lấp chỗ theo ý (`media-*`, `spotlight`, `magazine`, `stairs`) thay vì nhét thêm một ô bên phải; hoặc gộp slide thưa, thêm hình, số |
 | `chữ khó đọc trên hình X` | dời hoặc thu hẹp khối chữ khỏi hình X, hoặc đổi màu chữ ở slide đó |
 | `tràn khung` / `chữ tràn hộp` | rút gọn, tách slide, hoặc `data-density="sm"` |
 | `nhàm: giống hệt 2 slide trước` | đổi dáng, khung hoặc hiệu ứng của slide đó |
+| `nhàm toàn deck: dáng ... lần thứ N` | đổi khung của slide đó theo gợi ý ở mục 2 (đổi màu hay hiệu ứng không tính) |
+| `ít khung` | gắn `data-frame` khác nhau cho vài slide bên trong |
 | `biểu đồ ... thiếu data-source` | ghi nguồn; không có nguồn thì bỏ biểu đồ có số |
 
 ### Bước 6. Bàn giao
 - Nêu đường dẫn tuyệt đối, số slide, style.
 - Trình chiếu: mũi tên, Space hoặc nút `‹ ›` ở hai rìa; `F` toàn màn hình; bấm vào thân slide không chuyển nên chép chữ thoải mái.
-- Cần file PowerPoint: `python "$SK/scripts/export-pptx.py" deck.html deck.pptx` ra file .pptx sửa được: hình trang trí và logo bay bằng Morph, chữ hiện theo đúng hiệu ứng và cú bấm của bản HTML, font và hoa văn của style đi kèm (`references/xuat-pptx.md`). Mở bằng PowerPoint 2019/365; máy trình chiếu chưa có font của style thì chạy `python "$SK/scripts/install-fonts.py" deck.html`.
+- Chỉ khi người dùng xin file PowerPoint: `python "$SK/scripts/export-pptx.py" deck.html deck.pptx` ra file .pptx sửa được: hình trang trí và logo bay bằng Morph, chữ hiện theo đúng hiệu ứng và cú bấm của bản HTML, font và hoa văn của style đi kèm (`references/xuat-pptx.md`). Mở bằng PowerPoint 2019/365; máy trình chiếu chưa có font của style thì chạy `python "$SK/scripts/install-fonts.py" deck.html`.
 - File HTML cần mạng để tải font Google; không mạng thì dùng font dự phòng.
 
 ## Thay nội dung mẫu Morph Đại Học

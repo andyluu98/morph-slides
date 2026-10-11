@@ -74,9 +74,9 @@ def title(ctx, slide, frame_box=None, mode=''):
     mid = t.attrs.get('data-morph-id')
     name = f'!!t-{mid}' if mid else 'Title'
     if frame_box:
-        x, y, w, size, role = frame_box
+        x, y, w, size, role = frame_box[:5]
         h = lines(t.text(), size, w) * size * 1.15 + 10
-        ctx.box(name, x, y, w, h, [para(runs(ctx, t, size, role, 'display', True))], 'b' if y > 700 else 't')
+        ctx.box(name, x, y, w, h, [para(runs(ctx, t, size, role, 'display', True), frame_box[5] if len(frame_box) > 5 else 'l')], 'b' if y > 700 else 't')
     elif mode == 'side':
         ctx.box(name, 116 - 440, 550 - 45, 880, 90, [para(runs(ctx, t, 54, 'fg', 'display', True))], 'ctr', rot=270)
     else:
@@ -109,6 +109,29 @@ def bullets(ctx, node, x, y, w, h, size_key='bullets', frame=''):
             ctx.box(f'Point {i + 1}', x + (w * 0.26 if i % 2 else 0), top + i * (ch + 26), w * 0.74, ch,
                     [para(runs(ctx, li, fs * 0.8))], 'ctr', fill=ctx.t['tint'], geom=('roundRect', 12000), inset=26)
         return
+    if frame == 'stairs':   # numbered cards stepping down and right
+        n = len(items)
+        ch = min(150, (h - 18 * (n - 1)) / max(n, 1))
+        top = y + (h - n * ch - 18 * (n - 1)) / 2
+        for i, li in enumerate(items):
+            ctx.box(f'Step {i + 1}', x + w * min(i * 0.105, 0.42), top + i * (ch + 18), w * 0.6, ch,
+                    [para([ctx.run(f'{i + 1}   ', fs * 1.3, 'accent', True, 'display')] + runs(ctx, li, fs))], 'ctr',
+                    fill=ctx.t['tint'], geom=('roundRect', 8000), inset=26)
+        return
+    if frame == 'spotlight':   # a row of cards under the key sentence
+        n, gap = len(items), 40
+        cw = (w - gap * (n - 1)) / max(n, 1)
+        for i, li in enumerate(items):
+            ctx.box(f'Point {i + 1}', x + i * (cw + gap), y, cw, h, [para(runs(ctx, li, 36), 'ctr')], 'ctr',
+                    fill=ctx.t['tint'], geom=('roundRect', 10000), inset=30)
+        return
+    if frame == 'magazine':   # two text columns
+        cw = (w - 72) / 2
+        for c, part in enumerate((items[0::2], items[1::2])):   # the CSS grid fills row by row
+            ps = [para(runs(ctx, li, fs), 'l', gap if i else 0, 112, ctx.t.get('bullet', '•')) for i, li in enumerate(part)]
+            if ps:
+                ctx.box(f'Column {c + 1}', x + c * (cw + 72), y + h * 0.12, cw, h * 0.88, ps, 't')   # both columns start on the same line, like the CSS grid rows
+        return
     if frame == 'numbered':   # big numbers instead of dots
         ps = [para([ctx.run(f'{i + 1:02d}   ', fs * 1.3, 'accent', True, 'display')] + runs(ctx, li, fs), 'l', gap if i else 0, 112)
               for i, li in enumerate(items)]
@@ -117,13 +140,13 @@ def bullets(ctx, node, x, y, w, h, size_key='bullets', frame=''):
     ctx.box('Bullets', x, y, w, h, ps, 'ctr')
 
 
-def highlight(ctx, node, x, y, w, h, on_panel=False):
+def highlight(ctx, node, x, y, w, h, on_panel=False, big_cap=160, align='ctr'):
     role = 'on_accent' if on_panel else 'accent'
     ps, keep = [], ctx.over
     ctx.over = {} if on_panel else keep   # the style's hl-big colour is usually the accent: invisible on an accent panel
     for n in node.find_all(lambda n: set(n.cls) & {'hl-big', 'hl-text'}):
         big = 'hl-big' in n.cls
-        ps.append(para(runs(ctx, n, fit(n, 160, w) if big else 34, role if big else ('on_accent' if on_panel else 'fg'), 'display', True), 'ctr', 14 if ps else 0))
+        ps.append(para(runs(ctx, n, fit(n, big_cap, w) if big else 34, role if big else ('on_accent' if on_panel else 'fg'), 'display', True), align, 14 if ps else 0))
     ctx.over = keep
     ico = node.find(lambda n: 'ico' in n.cls)
     if ico:   # icon centred above the words

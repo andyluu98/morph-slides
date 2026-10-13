@@ -1,0 +1,4 @@
+interface:
+  display_name: "SlideFly"
+  short_description: "Slide HTML có chuyển cảnh kiểu PowerPoint Morph, 85 style, xuất được .pptx"
+  default_prompt: "Dùng $slidefly làm bộ slide về chủ đề sau:"

@@ -1,13 +1,13 @@
 ---
 name: slidefly
-description: Tạo slide HTML có hiệu ứng chuyển cảnh kiểu PowerPoint Morph (hình trang trí trượt, phóng to, đổi màu liền mạch giữa các slide), 85 style (34 style hai lớp có minh họa vẽ riêng từng slide), 21 kiểu slide, 17 khung bố cục, sơ đồ tự vẽ, và xuất ra file PowerPoint .pptx sửa được vẫn giữ Morph. Dùng khi người dùng nói "slide morph", "slide animation đẹp", "slide HTML có hiệu ứng chuyển cảnh", "làm deck chuyển động", "xuất pptx có morph", "/slidefly", "SlideFly", hoặc muốn chuyển một mẫu PowerPoint Morph sang web. Không dùng khi chỉ cần một file Word/Excel, hay slide HTML hiệu ứng xuất hiện đơn giản (frontend-slides).
+description: Tạo slide HTML có hiệu ứng chuyển cảnh kiểu PowerPoint Morph (hình trang trí trượt, phóng to, đổi màu liền mạch giữa các slide), 85 style (34 style hai lớp có minh họa vẽ riêng từng slide), 21 kiểu slide, 17 khung bố cục, sơ đồ tự vẽ, và xuất ra file PowerPoint .pptx sửa được vẫn giữ Morph. Dùng khi người dùng xin làm slide, bài thuyết trình, trình chiếu, deck, presentation, hoặc nói "slide morph", "slide animation đẹp", "slide HTML có hiệu ứng chuyển cảnh", "làm deck chuyển động", "xuất pptx có morph", "/slidefly", "SlideFly", hoặc muốn chuyển một mẫu PowerPoint Morph sang web. Không dùng khi chỉ cần một file Word/Excel, hay slide HTML hiệu ứng xuất hiện đơn giản (frontend-slides).
 ---
 
 # SlideFly: slide biết bay
 
 Slide HTML một file, trình chiếu bằng Chrome/Edge, và xuất được sang PowerPoint. Hình trang trí ("diễn viên") sống trên một sân khấu chung; mỗi kiểu slide là một "tư thế". Chuyển slide thì diễn viên trượt sang tư thế mới, đúng tinh thần Morph: cùng tên là cùng một vật.
 
-Skill dir: `~/.claude/skills/slidefly/` (gọi tắt `$SK`). Script chỉ dùng thư viện chuẩn của Python 3.10+, không cần cài gì thêm.
+Skill dir (gọi tắt `$SK`): thư mục chứa chính file SKILL.md này. Tùy app đang chạy skill, thường là `~/.claude/skills/slidefly/` (Claude Code, Claude Desktop), `~/.agents/skills/slidefly/` (Codex app, CLI, IDE), `~/.gemini/config/skills/slidefly/` (Antigravity). Script chỉ dùng thư viện chuẩn của Python 3.10+, không cần cài gì thêm; trên máy chỉ có `python3` thì gọi `python3` thay cho `python`.
 
 **Tinh thần:** đây là bộ đồ nghề, không phải khuôn. Mỗi deck phải mang dáng riêng của nội dung đó. Hai người gõ cùng một đề tài vẫn phải ra hai deck khác nhau. Dùng đồ nghề có sẵn cho phần việc lặp lại, dành công sáng tạo cho những slide đáng nhớ.
 
@@ -81,7 +81,7 @@ python "$SK/scripts/inline-assets.py" nguon.html "<thu-muc-dich>/NN_ten-deck.htm
 ```
 
 ### Bước 5. Tự xem lại
-- Mở file bằng trình duyệt của app (Claude Browser), đi qua từng slide, chụp vài slide tiêu biểu để nhìn bằng mắt: chữ đè hình, tương phản, lệch, chỗ trống, dáng lặp.
+- Mở file bằng trình duyệt mà app cho điều khiển (Claude Browser trong Claude Desktop, trình duyệt của agent trong Antigravity, trình duyệt tích hợp của Codex nếu có). App không có trình duyệt thì giao file và nhờ người dùng mở bằng Chrome, nhấn F12, gõ `deck.audit()` rồi gửi lại kết quả. Đi qua từng slide, chụp vài slide tiêu biểu để nhìn bằng mắt: chữ đè hình, tương phản, lệch, chỗ trống, dáng lặp.
 - Gõ `deck.audit()` trong trang (javascript của trình duyệt): báo khoảng trống, tràn chữ, chữ khó đọc trên hình, slide lặp dáng, biểu đồ thiếu nguồn, icon lỗi. Sửa tới khi không còn lỗi.
 
 | Báo lỗi | Hướng sửa |

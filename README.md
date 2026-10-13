@@ -1,8 +1,8 @@
 # SlideFly: slide biết bay
 
-Skill cho [Claude Code](https://claude.com/claude-code) tạo **slide HTML có hiệu ứng chuyển cảnh kiểu PowerPoint Morph**: hình trang trí trượt, phóng to, đổi màu liền mạch giữa các slide. Một file HTML, mở bằng Chrome là trình chiếu được. Có **57 style**, bố cục tự lấp đầy theo lượng chữ và tự đo độ trống của từng slide.
+Skill cho [Claude Code](https://claude.com/claude-code), [Codex](https://learn.chatgpt.com/docs/build-skills) (ChatGPT) và [Antigravity](https://antigravity.google/docs/skills) (Gemini) tạo **slide HTML có hiệu ứng chuyển cảnh kiểu PowerPoint Morph**: hình trang trí trượt, phóng to, đổi màu liền mạch giữa các slide. Một file HTML, mở bằng Chrome là trình chiếu được. Có **57 style**, bố cục tự lấp đầy theo lượng chữ và tự đo độ trống của từng slide.
 
-*A Claude Code skill that builds single-file HTML decks with PowerPoint-Morph-like transitions: 85 styles, auto-filling layouts and an automatic fill/overflow audit. Docs are in Vietnamese.*
+*An agent skill for Claude Code, Codex and Antigravity that builds single-file HTML decks with PowerPoint-Morph-like transitions: 85 styles, auto-filling layouts and an automatic fill/overflow audit. Docs are in Vietnamese.*
 
 **Xem trực tuyến:** [Thư viện 85 style](https://andyluu98.github.io/slidefly/gallery/00-gallery.html) · [Deck mẫu 20 slide (Stencil & Tablet)](https://andyluu98.github.io/slidefly/examples/ai-agent-stencil-tablet-20-slide.html) · [Deck mẫu 15 slide (Swiss Modern)](https://andyluu98.github.io/slidefly/examples/ai-agent-swiss-15-slide.html)
 
@@ -32,23 +32,47 @@ Mỗi style có một nhóm hình cố định gọi là **diễn viên**. Mỗi
 - **Không lặp nhàm:** cùng một kiểu slide xuất hiện nhiều lần sẽ đổi dáng (biến thể 1, 2, 3) và đổi hướng chữ vào khung. Slide sơ đồ, bento, bảng so sánh vẫn giữ hình trang trí của style ở viền thay vì để sân khấu trống. Tiêu đề có hai biến thể: đặt giữa (`data-title="center"`) và chạy dọc mép trái (`data-title="side"`); slide nào cũng có thể mượn tư thế của kiểu khác bằng `data-stage`.
 - **Slide tự thiết kế:** `data-layout="free"` cho sân khấu trống để AI tự dựng bố cục riêng bằng CSS của deck (chữ khổng lồ cắt mép, lưới bất đối xứng, timeline uốn lượn...). Skill coi đồ nghề có sẵn là gợi ý, không phải khuôn, nên mỗi deck có vài slide mang dáng riêng (`references/tu-thiet-ke.md`).
 - **Chữ bay giữa hai slide (FLIP):** ví dụ tiêu đề mục ở trang mục lục bay sang thành tiêu đề phần.
-- **Tự kiểm tra ngay trong trang:** mở deck rồi gõ `deck.audit()` trong console (hoặc để Claude gõ qua trình duyệt của app): đo khoảng trống và chữ tràn, độ tương phản của chữ với hình phía sau và với khung chứa nó, slide lặp dáng, biểu đồ thiếu nguồn. Không cần cài gì thêm.
+- **Tự kiểm tra ngay trong trang:** mở deck rồi gõ `deck.audit()` trong console (hoặc để agent gõ qua trình duyệt của app): đo khoảng trống và chữ tràn, độ tương phản của chữ với hình phía sau và với khung chứa nó, slide lặp dáng, biểu đồ thiếu nguồn. Không cần cài gì thêm.
 - **Xuất PowerPoint có Morph:** `scripts/export-pptx.py` ghi file .pptx sửa được, hình trang trí cùng tên qua các slide nên PowerPoint Morph cho chúng bay như bản HTML.
 - **Không phụ thuộc thư viện:** chỉ HTML, CSS, JavaScript thuần. Có chế độ giảm chuyển động.
 
 ## Cài đặt
 
+Skill viết theo chuẩn chung `SKILL.md`, nên cùng một thư mục `skill/slidefly` chạy được trên ba app. Tải repo về một lần, rồi chép vào thư mục skill của app anh/chị dùng (cài nhiều app thì chép vào nhiều chỗ):
+
+| App | Thư mục skill dùng cho mọi dự án |
+|---|---|
+| Claude Code, Claude Desktop (tab Code) | `~/.claude/skills/` |
+| Codex: app ChatGPT/Codex trên máy tính, Codex CLI, tiện ích IDE | `~/.agents/skills/` |
+| Antigravity (Gemini) | `~/.gemini/config/skills/` (bản cũ: `~/.gemini/antigravity/skills/`) |
+
+macOS, Linux, Git Bash:
+
 ```bash
 git clone https://github.com/andyluu98/slidefly.git
+mkdir -p ~/.claude/skills ~/.agents/skills ~/.gemini/config/skills
 cp -r slidefly/skill/slidefly ~/.claude/skills/
-pip install -r slidefly/requirements.txt
+cp -r slidefly/skill/slidefly ~/.agents/skills/
+cp -r slidefly/skill/slidefly ~/.gemini/config/skills/
 ```
+
+Windows PowerShell:
+
+```powershell
+git clone https://github.com/andyluu98/slidefly.git
+foreach ($d in "$HOME\.claude\skills", "$HOME\.agents\skills", "$HOME\.gemini\config\skills") {
+  New-Item -ItemType Directory -Force $d | Out-Null
+  Copy-Item -Recurse slidefly\skill\slidefly $d
+}
+```
+
+Mở lại app (hoặc phiên mới) để app nhận skill. Gọi skill: Claude gõ `/slidefly`, Codex gõ `$slidefly`, Antigravity nói thẳng yêu cầu làm slide là agent tự chọn skill. Chỉ muốn dùng cho một dự án thì chép vào `.claude/skills/` (Claude) hoặc `.agents/skills/` (Codex, Antigravity) trong thư mục dự án.
 
 Python chỉ cần cho các script kiểm tra và đóng gói. Deck tạo ra chạy được trên mọi trình duyệt hiện đại mà không cần Python.
 
 ## Cách dùng
 
-Trong Claude Code, gõ `/slidefly` hoặc nói tự nhiên, ví dụ: *"Làm 20 slide giải thích AI Agent, style stencil-tablet"*. Skill sẽ lập dàn ý, chọn kiểu slide, dựng deck, tự kiểm tra rồi đóng gói thành một file HTML.
+Trong Claude Code gõ `/slidefly`, trong Codex gõ `$slidefly`, hoặc nói tự nhiên (Antigravity và cả ba app đều tự nhận ra), ví dụ: *"Làm 20 slide giải thích AI Agent, style stencil-tablet"*. Skill sẽ lập dàn ý, chọn kiểu slide, dựng deck, tự kiểm tra rồi đóng gói thành một file HTML.
 
 Dùng thủ công không qua Claude:
 
@@ -63,7 +87,8 @@ Dùng thủ công không qua Claude:
 
 ```
 skill/slidefly/
-├── SKILL.md                 quy trình cho Claude
+├── SKILL.md                 quy trình cho agent (Claude, Codex, Antigravity đọc chung)
+├── agents/openai.yaml       tên và mô tả hiện trong app Codex
 ├── assets/
 │   ├── morph-engine.js      co giãn khung, diễn viên, biến thể, FLIP
 │   ├── morph-nav.js         phím, 2 nút rìa, vuốt (bấm thân slide không chuyển)
